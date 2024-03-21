@@ -123,8 +123,8 @@ void Order(SOCKET clientSocket, char* clientMessage)
 void AddRequestToQueue(SOCKET clientSocket, char* clientMessage) {
 	if (numRequests < MAX_CLIENTS) {
 
-		requestArray[numRequests].clientSocket = clientSocket;
-		requestArray[numRequests].order = clientMessage;
+		requestArray[numRequests].clientSocket = clientSocket;// добавляет  в массив структур requestArray
+		requestArray[numRequests].order = clientMessage;// добавляет  в массив структур requestArray
 		numRequests++;
 	}
 	else {
@@ -279,8 +279,9 @@ int main() {
 				{
 					cout << "Client #" << i << " is off\n";
 					client_socket[i] = 0;
+					WSACleanup();
 				}
-
+				
 				string temp = client_message;
 				// temp += "\n";
 				// 
