@@ -18,7 +18,6 @@ SOCKET server_socket;
 
 vector<string> history;
 
-
 ////////////////////////////////////////////////////////////////////
 string food[] = {"hamburger", "sprite", "free potato","ice cream"};
 int timefood[] = {5, 1, 3,2};
