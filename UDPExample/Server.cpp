@@ -25,6 +25,18 @@ int timefood[] = {5, 1, 3,2};
 int moneyfood[] = { 50, 35, 40,45 };
 
 
+
+
+struct ClientRequest {
+	SOCKET clientSocket;
+	string order;
+};
+
+ClientRequest requestArray[MAX_CLIENTS]; // Массив запросов от клиентов
+int numRequests = 0; // Количество запросов в массиве/                     
+
+
+
                 
 
 void Order(SOCKET clientSocket, char* clientMessage)
@@ -102,6 +114,42 @@ void Order(SOCKET clientSocket, char* clientMessage)
 	 string response = "Waiting time: " + to_string(totalTime) + " seconds. Cost:" + to_string(totalMoney)+" hryvnias.";
 	 send(clientSocket, response.c_str(), response.size(), 0);
 
+}
+
+
+
+
+
+void AddRequestToQueue(SOCKET clientSocket, char* clientMessage) {
+	if (numRequests < MAX_CLIENTS) {
+
+		requestArray[numRequests].clientSocket = clientSocket;
+		requestArray[numRequests].order = clientMessage;
+		numRequests++;
+	}
+	else {
+		cout << "Queue is full." << endl;
+	}
+}
+
+void ProcessRequests() {
+	for (int i = 0; i < numRequests; i++) {
+		SOCKET clientSocket = requestArray[i].clientSocket; // Получаем сокет клиента из массива
+		string order = requestArray[i].order; // Получаем заказ клиента из массива
+
+
+		Sleep(9000);
+		string response = "Processing  order: " + order;
+		send(clientSocket, response.c_str(), response.size(), 0);
+
+
+		char buf[255];
+		strcpy(buf, order.c_str());
+		Order(clientSocket, buf);
+
+
+	}
+	numRequests = 0; // Сброс количества запросов после обработки всех
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -251,11 +299,11 @@ int main() {
 				// 
 				////////////////////////
 				
-				Order(s, client_message);
+				AddRequestToQueue(s, client_message);
 				
 			}
 		}
-	
+		ProcessRequests();
 		Sleep(11000);
 		///////////////////////
 	}
