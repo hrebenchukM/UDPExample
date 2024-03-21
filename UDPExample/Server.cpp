@@ -126,6 +126,12 @@ void AddRequestToQueue(SOCKET clientSocket, char* clientMessage) {
 		requestArray[numRequests].clientSocket = clientSocket;// добавляет  в массив структур requestArray
 		requestArray[numRequests].order = clientMessage;// добавляет  в массив структур requestArray
 		numRequests++;
+		if (clientMessage == "off")
+		{
+			WSACleanup();
+		}
+
+		
 	}
 	else {
 		cout << "Queue is full." << endl;
@@ -279,33 +285,29 @@ int main() {
 				{
 					cout << "Client #" << i << " is off\n";
 					client_socket[i] = 0;
-					WSACleanup();
+					closesocket(client_socket[i]);
+				}
+				else
+				{
+					AddRequestToQueue(s, client_message);
+					continue;
 				}
 				
-				string temp = client_message;
+				//string temp = client_message;
 				// temp += "\n";
-				// 
-				// 
+			
 				//history.push_back(temp);
-				//
-				//
-				//
-				/*for (int i = 0; i < MAX_CLIENTS; i++) {
-					if (client_socket[i] != 0) {
-						send(client_socket[i], client_message, client_message_length, 0);
-					}
-				}*/
-				//
-				// 
-				// 
-				////////////////////////
-				
-				AddRequestToQueue(s, client_message);
+
+						/*	for (int i = 0; i < MAX_CLIENTS; i++) {
+						if (client_socket[i] != 0) {
+							send(client_socket[i], client_message, client_message_length, 0);
+						}
+					}*/
 				
 			}
 		}
 		ProcessRequests();
-		Sleep(11000);
+		Sleep(1000);
 		///////////////////////
 	}
 
